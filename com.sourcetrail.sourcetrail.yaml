@@ -46,7 +46,7 @@ modules:
       - cp -R -t /app/bin/ ../bin/app/data ../bin/app/user
       - install -D app/Sourcetrail /app/bin/Sourcetrail
       - install -D app/sourcetrail_indexer /app/bin/sourcetrail_indexer
-      - install -D ../setup/Linux/data/sourcetrail-mime.xml /app/share/mime/packages/sourcetrail-mime.xml
+      - install -D ../setup/Linux/data/sourcetrail-mime.xml /app/share/mime/packages/com.sourcetrail.sourcetrail.mime.xml
       - install -D ../com.sourcetrail.sourcetrail.desktop /app/share/applications/com.sourcetrail.sourcetrail.desktop
       - install -D ../bin/app/data/gui/icon/project_256_256.png /app/share/icons/hicolor/256x256/mimetypes/com.sourcetrail.sourcetrail.application-x-sourcetrail.png
     sources:
