@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=Sourcetrail
+GenericName=Code Explorer
+X-GNOME-FullName=Sourcetrail
+Comment=Interactive multi Language Source Code Explorer and Indexer
+Exec=Sourcetrail
+Icon=com.sourcetrail.sourcetrail
+Terminal=false
+Type=Application
+MimeType=application/x-sourcetrail;
+Categories=Development;
+StartupNotify=true
+StartupWMClass=Sourcetrail

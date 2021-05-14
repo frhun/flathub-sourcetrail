@@ -1,0 +1,73 @@
+app-id: com.sourcetrail.sourcetrail
+runtime: org.kde.Platform
+runtime-version: '5.15'
+sdk: org.kde.Sdk
+command: Sourcetrail
+finish-args:
+  - "--share=ipc"
+  - "--share=network"
+  - "--socket=cups"
+  - "--socket=wayland"
+  - "--socket=x11"
+  # x11 is needed for the image copy to clipboard functionality
+  # this, and the following env is needed for that to work
+  # info: https://github.com/flathub/org.kde.okular/issues/41
+  # TODO: just mirror what KDE is doing here https://github.com/flathub/org.kde.kontact/blob/master/org.kde.kontact.json
+  - "--env=QT_QPA_PLATFORM=xcb"
+  - "--filesystem=home:ro"
+  - "--filesystem=xdg-download:rw"
+  - "--filesystem=xdg-desktop:rw"
+  - "--filesystem=~/.config/flatpak:create"
+
+modules:
+  - name: boost
+    buildsystem: simple
+    sources:
+      - type: archive
+        url: https://boostorg.jfrog.io/artifactory/main/release/1.67.0/source/boost_1_67_0.tar.bz2
+        sha256: 2684c972994ee57fc5632e03bf044746f6eb45d4920c343937a465fd67a5adba
+    build-commands:
+      - ./bootstrap.sh --prefix=${FLATPAK_DEST} --with-libraries=filesystem,program_options,system,date_time
+      - ./b2 -j$FLATPAK_BUILDER_N_JOBS --link=static,shared --variant=release --debug-symbols=off --threading=multi --runtime-link=static --cxxflags=-fPIC --layout=system install
+    cleanup:
+      - /include
+      
+  - name: sourcetrail
+    buildsystem: cmake-ninja
+    builddir: true
+    no-make-install: true
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_INSTALL_PREFIX=/app
+      - -DCMAKE_INSTALL_LIBDIR=/app/lib
+    build-commands:
+      - install -D ../com.sourcetrail.sourcetrail.metainfo.xml /app/share/metainfo/com.sourcetrail.sourcetrail.metainfo.xml
+      - install -d /app/bin/
+      - cp -R -t /app/bin/ ../bin/app/data ../bin/app/user
+      - install -D app/Sourcetrail /app/bin/Sourcetrail
+      - install -D app/sourcetrail_indexer /app/bin/sourcetrail_indexer
+      - install -D ../setup/Linux/data/sourcetrail-mime.xml /app/share/mime/packages/sourcetrail-mime.xml
+      - install -D ../com.sourcetrail.sourcetrail.desktop /app/share/applications/com.sourcetrail.sourcetrail.desktop
+      - install -D ../bin/app/data/gui/icon/project_256_256.png /app/share/icons/hicolor/256x256/mimetypes/com.sourcetrail.sourcetrail.application-x-sourcetrail.png
+    sources:
+      - type: archive
+        url: https://github.com/CoatiSoftware/Sourcetrail/archive/refs/tags/2021.1.30.tar.gz
+        sha256: 9f45999e892182884b9101f262e283b461011ed33576a9828e62853711f142eb
+      - type: file
+        path: com.sourcetrail.sourcetrail.metainfo.xml
+      - type: file
+        path: com.sourcetrail.sourcetrail.desktop
+      - type: patch
+        path: mimeicon.patch
+        
+  - name: sourcetrail-icons
+    buildsystem: simple
+    build-commands:
+      - install -D icon-512.png /app/share/icons/hicolor/512x512/apps/com.sourcetrail.sourcetrail.png
+      - install -D icon-256.png /app/share/icons/hicolor/256x256/apps/com.sourcetrail.sourcetrail.png
+      - install -D icon-128.png /app/share/icons/hicolor/128x128/apps/com.sourcetrail.sourcetrail.png
+      - install -D icon-64.png /app/share/icons/hicolor/64x64/apps/com.sourcetrail.sourcetrail.png
+      - install -D symbolic.svg /app/share/icons/hicolor/symbolic/apps/com.sourcetrail.sourcetrail-symbolic.svg
+    sources:
+      - type: dir
+        path: icons

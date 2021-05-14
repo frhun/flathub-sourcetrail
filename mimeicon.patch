@@ -1,0 +1,17 @@
+*** a/setup/Linux/data/sourcetrail-mime.xml	2021-05-14 01:47:03.190870012 +0200
+--- b/setup/Linux/data/sourcetrail-mime.xml	2021-05-14 01:46:43.810681626 +0200
+***************
+*** 5,14 ****
+--- 5,16 ----
+  		<icon name="project-sourcetrail"/>
+  		<glob-deleteall/>
+  		<glob pattern="*.srctrlprj"/>
++ 		<generic-icon name="com.sourcetrail.sourcetrail.application-x-sourcetrail"/>
+  	</mime-type>
+      <mime-type type="application/x-sourcetrail">
+  		<comment>Sourcetrail Database</comment>
+  		<glob-deleteall/>
+  		<glob pattern="*.srctrldb"/>
++ 		<generic-icon name="com.sourcetrail.sourcetrail.application-x-sourcetrail"/>
+  	</mime-type>
+  </mime-info>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.sourcetrail.sourcetrail</id>
+  <name>Sourcetrail</name>
+  <summary>Multi Language Source Explorer and Indexer</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0</project_license>
+  <description>
+    <p>Sourcetrail is an application that helps you navigate and understanding large codebases.</p>
+    <p>It supports C, C++, Java, and Python out of the box.</p>
+    <p>Sourcetrails intuitive visualization helps you to understand even large unfamiliar codebases quickly,
+       but also helps you to understand the relation between different pieces of code in projects you are already familiar with.</p>
+    <p>Sourcetrail handles even the largest codebases with multiple millions of lines of code.</p>
+    <p>There are many connectors, to integrate Sourcetrail in to the code editor of your choice:
+      <ul>
+        <li>Atom</li>
+        <li>Clion</li>
+        <li>Eclipse</li>
+        <li>Emacs</li>
+        <li>IntelliJ IDEA</li>
+        <li>Neovim</li>
+        <li>PyCharm</li>
+        <li>QtCreator</li>
+        <li>Sublime Text</li>
+        <li>Vim</li>
+        <li>Visual Studio Code</li>
+      </ul>    
+    </p>
+  </description>
+  <screenshots>
+    <screenshot type="default">
+      <image>
+        https://github.com/CoatiSoftware/Sourcetrail/raw/b5fb1dd22b7520bc103cf7a6c3aa335c772e1768/docs/readme/user_interface.png
+      </image>
+      <caption>The main Window</caption>
+    </screenshot>
+  </screenshots>
+  
+  <url type="bugtracker">https://github.com/CoatiSoftware/Sourcetrail/issues</url>
+  <url type="homepage">https://www.sourcetrail.com/</url>
+  <url type="donation">https://www.patreon.com/sourcetrail</url>
+  <url type="help">https://www.sourcetrail.com/documentation/</url>
+  
+  <launchable type="desktop-id">com.sourcetrail.sourcetrail.desktop</launchable>
+  
+  <content_rating type="oars-1.1" />
+  
+  <provides>
+    <mediatype>application/x-sourcetrail</mediatype>
+  </provides>
+  
+  <releases>
+    <release version="2021.1.30" date="2021-03-15">
+      <description>
+        <ul>
+          <li>Java: Fixed Java path detection failures on linux</li>
+          <li>Java: Updated Java dependencies to add support for Java 13, 14 and 15</li>
+          <li>C/C++: Fixed crash due to nullpointer access in indexer</li>
+          <li>Python: Updated SourcetrailPythonIndexer to version 1.25.6 to fix issue when storing file content to database</li>
+          <li>Graph: Fixed multi-level inheritance edges when there are diamond structures</li>
+          <li>UI: hide news widget if no news are available</li>
+          <li>Linux: Simplified symbolic link resolution in Linux Sourcetrail launch script</li>
+        </ul>
+      </description>
+    </release>
+  </releases>
+  
+</component>
