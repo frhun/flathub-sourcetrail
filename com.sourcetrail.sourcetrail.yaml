@@ -2,10 +2,13 @@ app-id: com.sourcetrail.sourcetrail
 runtime: org.kde.Platform
 runtime-version: '5.15'
 sdk: org.kde.Sdk
-command: Sourcetrail
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.llvm12
+command: /app/Sourcetrail.sh
 finish-args:
   - "--share=ipc"
   - "--share=network"
+  - "--device=dri"
   - "--socket=cups"
   - "--socket=wayland"
   - "--socket=x11"
@@ -14,11 +17,10 @@ finish-args:
   # info: https://github.com/flathub/org.kde.okular/issues/41
   # TODO: just mirror what KDE is doing here https://github.com/flathub/org.kde.kontact/blob/master/org.kde.kontact.json
   - "--env=QT_QPA_PLATFORM=xcb"
-  - "--filesystem=home:ro"
-  - "--filesystem=xdg-download:rw"
-  - "--filesystem=xdg-desktop:rw"
+  - "--filesystem=home:rw"
+  - "--filesystem=/usr/include:ro"
+  - "--filesystem=host:ro"
   - "--filesystem=~/.config/flatpak:create"
-
 modules:
   - name: boost
     buildsystem: simple
@@ -31,35 +33,62 @@ modules:
       - ./b2 -j$FLATPAK_BUILDER_N_JOBS --link=static,shared --variant=release --debug-symbols=off --threading=multi --runtime-link=static --cxxflags=-fPIC --layout=system install
     cleanup:
       - /include
-      
+
   - name: sourcetrail
     buildsystem: cmake-ninja
     builddir: true
     no-make-install: true
+    build-options:
+      - prepend-ld-library-path: "/usr/lib/sdk/llvm12/lib"
+        prepend-path: "/usr/lib/sdk/llvm12/bin"
+        cflags: "-g0"
+        cxxflags: "-g0"
+        env:
+          - CC: "ccache clang"
+            CXX: "ccache clang++"
+        ldflags: "-fuse-ld=lld"
     config-opts:
+      - "-DCMAKE_CXX_COMPILER_LAUNCHER='ccache'"
+      - "-DCMAKE_CXX_COMPILER='clang++'"
+      - "-DCMAKE_C_COMPILER_LAUNCHER='ccache'"
+      - "-DCMAKE_C_COMPILER='clang'"
+      - "-DCMAKE_ASM_COMPILER='llvm-as'"
+      - "-DCMAKE_LINKER='/usr/lib/sdk/llvm12/bin/ld.lld'"
+      - "-DCMAKE_CXX_LINK_EXECUTABLE='<CMAKE_CXX_COMPILER> -fuse-ld=lld <FLAGS> <CMAKE_CXX_LINK_FLAGS> <LINK_FLAGS> <OBJECTS> -o <TARGET> <LINK_LIBRARIES>'"
+      - -DCMAKE_PREFIX_PATH=/usr/lib/sdk/llvm12/lib/cmake
       - -DCMAKE_BUILD_TYPE=Release
-      - -DCMAKE_INSTALL_PREFIX=/app
-      - -DCMAKE_INSTALL_LIBDIR=/app/lib
-    build-commands:
+      #- -DBUILD_JAVA_LANGUAGE_PACKAGE=ON
+      #- -DBUILD_PYTHON_LANGUAGE_PACKAGE=ON
+      - -DBUILD_CXX_LANGUAGE_PACKAGE=ON
+      - "-DLIB_CXX_INCLUDE_PATHS='/usr/lib/sdk/llvm12/include'"
+    post-install:
       - install -D ../com.sourcetrail.sourcetrail.metainfo.xml /app/share/metainfo/com.sourcetrail.sourcetrail.metainfo.xml
       - install -d /app/bin/
-      - cp -R -t /app/bin/ ../bin/app/data ../bin/app/user
-      - install -D app/Sourcetrail /app/bin/Sourcetrail
+      - cp -R -t /app/bin ../bin/app/data ../bin/app/user
+      - install -D app/Sourcetrail /app/bin/sourcetrail
       - install -D app/sourcetrail_indexer /app/bin/sourcetrail_indexer
       - install -D ../setup/Linux/data/sourcetrail-mime.xml /app/share/mime/packages/com.sourcetrail.sourcetrail.mime.xml
       - install -D ../com.sourcetrail.sourcetrail.desktop /app/share/applications/com.sourcetrail.sourcetrail.desktop
       - install -D ../bin/app/data/gui/icon/project_256_256.png /app/share/icons/hicolor/256x256/mimetypes/com.sourcetrail.sourcetrail.application-x-sourcetrail.png
+      - cp /usr/lib/sdk/llvm12/lib/libLLVM-12.so /app/lib/
+      - cp /usr/lib/sdk/llvm12/lib/libclang-cpp.so.12 /app/lib/
+      - install ../setup/Linux/data/package/Sourcetrail.sh /app/Sourcetrail.sh
     sources:
-      - type: archive
-        url: https://github.com/CoatiSoftware/Sourcetrail/archive/refs/tags/2021.1.30.tar.gz
-        sha256: 9f45999e892182884b9101f262e283b461011ed33576a9828e62853711f142eb
+      - type: git
+        url: https://github.com/CoatiSoftware/Sourcetrail.git
+        disable-shallow-clone: true
+        commit: 5860949144c0687ce03b95b0744a90bd5eff0cc4
+      - type: patch
+        path: flatpak.patch
       - type: file
         path: com.sourcetrail.sourcetrail.metainfo.xml
       - type: file
         path: com.sourcetrail.sourcetrail.desktop
       - type: patch
         path: mimeicon.patch
-        
+    cleanup:
+      - /app/bin/data/install
+
   - name: sourcetrail-icons
     buildsystem: simple
     build-commands:

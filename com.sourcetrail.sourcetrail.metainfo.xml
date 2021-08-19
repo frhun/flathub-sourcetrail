@@ -11,21 +11,20 @@
     <p>Sourcetrails intuitive visualization helps you to understand even large unfamiliar codebases quickly,
        but also helps you to understand the relation between different pieces of code in projects you are already familiar with.</p>
     <p>Sourcetrail handles even the largest codebases with multiple millions of lines of code.</p>
-    <p>There are many connectors, to integrate Sourcetrail in to the code editor of your choice:
-      <ul>
-        <li>Atom</li>
-        <li>Clion</li>
-        <li>Eclipse</li>
-        <li>Emacs</li>
-        <li>IntelliJ IDEA</li>
-        <li>Neovim</li>
-        <li>PyCharm</li>
-        <li>QtCreator</li>
-        <li>Sublime Text</li>
-        <li>Vim</li>
-        <li>Visual Studio Code</li>
-      </ul>    
-    </p>
+    <p>There are many connectors, to integrate Sourcetrail in to the code editor of your choice:</p>
+    <ul>
+      <li>Atom</li>
+      <li>Clion</li>
+      <li>Eclipse</li>
+      <li>Emacs</li>
+      <li>IntelliJ IDEA</li>
+      <li>Neovim</li>
+      <li>PyCharm</li>
+      <li>QtCreator</li>
+      <li>Sublime Text</li>
+      <li>Vim</li>
+      <li>Visual Studio Code</li>
+    </ul>
   </description>
   <screenshots>
     <screenshot type="default">
